@@ -20,11 +20,11 @@ var taskFormHandler = function(event) {
     var taskDataObj = {
         name: taskNameInput,
         type: taskTypeInput
-    };
+    }
     
     //send it as an argument to createTaskEl
     createTaskEl(taskDataObj);
-}
+};
 
 var createTaskEl = function(taskDataObj) {
     // create list item
@@ -42,6 +42,8 @@ var createTaskEl = function(taskDataObj) {
     taskInfoEl.innerHTML = "<h3 class='task-name'>" + taskDataObj.name + "</h3><span class='task-type'>" + taskDataObj.type + "</span>";
     listItemEl.appendChild(taskInfoEl);
   
+    var taskActionsEl = createTaskActions(taskIdCounter);
+    listItemEl.appendChild(taskActionsEl);
     //add entire list item to list
     tasksToDoEl.appendChild(listItemEl);
 
@@ -52,7 +54,42 @@ var createTaskEl = function(taskDataObj) {
 var createTaskActions = function(taskId) {
     var actionContainerEl = document.createElement("div");
     actionContainerEl.className = "task-actions";
-}
+
+    //create edit button
+    var editButtonEl = document.createElement("button");
+    editButtonEl.textContent = "Edit" ;
+    editButtonEl.className = "btn edit-btn";
+    editButtonEl.setAttribute("data-task-id", taskId);
+    actionContainerEl.appendChild(editButtonEl);
+
+    //create delete button
+    var deleteButtonEl = document.createElement("button");
+    deleteButtonEl.textContent = "Delete";
+    deleteButtonEl.className = "btn delete-btn";
+    deleteButtonEl.setAttribute("data-task-id", taskId);
+    actionContainerEl.appendChild(deleteButtonEl);
+
+    var statusSelectEl = document.createElement("selet");
+    statusSelectEl.setAttribute("name", "status-change");
+    statusSelectEl.setAttribute("data-task-id", taskId);
+    statusSelectEl.className = "select-status";
+    actionContainerEl.appendChild(statusSelectEl);
+
+    // create status options
+    var statusChoices = ["To Do", "In Progress", "Completed"];
+
+    for (var i = 0; i < statusChoices.length; i++) {
+        //create option element
+        var statusOptionEl = document.createElement("option");
+        statusOptionEl.setAttribute("value", statusChoices[i]);
+        statusOptionEl.textContent = statusChoices[i];
+        
+        //append to select
+        statusSelectEl.appendChild(statusOptionEl);
+    }
+
+    return actionContainerEl;
+};   
 
 formEl.addEventListener("submit", taskFormHandler);
 
